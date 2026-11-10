@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS 1.2 Text, Sound & Images MCQ App</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #16a34a;
+            --success-bg: #dcfce7;
+            --danger: #dc2626;
+            --danger-bg: #fee2e2;
+            --warning: #d97706;
+            --accent: #f59e0b;
+        }
+
+        .dark-theme {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --primary: #3b82f6;
+            --primary-hover: #60a5fa;
+            --success: #22c55e;
+            --success-bg: #064e3b;
+            --danger: #ef4444;
+            --danger-bg: #7f1d1d;
+            --warning: #f59e0b;
+            --accent: #fbbf24;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .controls {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        button, select {
+            padding: 0.5rem 0.85rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover, select:hover {
+            border-color: var(--primary);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: #ffffff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        main {
+            flex: 1;
+            max-width: 900px;
+            width: 100%;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-box .number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-box .label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .meta-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .tag {
+            background-color: var(--border-color);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            line-height: 1.5;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-btn {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            text-align: left;
+            padding: 0.85rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .option-btn:hover {
+            background-color: var(--border-color);
+        }
+
+        .option-prefix {
+            font-weight: 700;
+            margin-right: 0.75rem;
+            min-width: 24px;
+        }
+
+        .option-btn.selected {
+            border-color: var(--primary);
+            background-color: rgba(37, 99, 235, 0.08);
+        }
+
+        .option-btn.correct {
+            border-color: var(--success);
+            background-color: var(--success-bg);
+            color: var(--text-color);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--danger);
+            background-color: var(--danger-bg);
+            color: var(--text-color);
+        }
+
+        .explanation {
+            margin-top: 1.25rem;
+            padding: 1rem;
+            border-radius: 6px;
+            background-color: var(--bg-color);
+            border-left: 4px solid var(--primary);
+            font-size: 0.95rem;
+            line-height: 1.45;
+            display: none;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+
+        .grid-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .grid-nav-btn {
+            height: 36px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 4px;
+        }
+
+        .grid-nav-btn.answered {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .grid-nav-btn.bookmarked {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>IGCSE Computer Science</h1>
+            <p>1.2 Text, Sound & Images Quiz (50 MCQs)</p>
+        </div>
+        <div class="controls">
+            <button id="themeToggle">🌓 Theme</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- SETUP / DASHBOARD SCREEN -->
+        <div id="setupScreen" class="card">
+            <h2 style="margin-bottom: 1rem;">Quiz Configuration</h2>
+            
+            <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 0.4rem;">Mode</label>
+                    <select id="modeSelect" style="width: 100%;">
+                        <option value="practice">Practice Mode (Instant Feedback & Explanations)</option>
+                        <option value="exam">Exam Mode (Timed, Results at End)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 0.4rem;">Topic Filter</label>
+                    <select id="topicSelect" style="width: 100%;">
+                        <option value="all">All Topics (50 Questions)</option>
+                        <option value="text">Text & Character Sets (ASCII / Unicode)</option>
+                        <option value="sound">Sound Representation & Audio Digitization</option>
+                        <option value="images">Bitmap Images & Color Depth</option>
+                        <option value="compression">Data Storage & File Compression (RLE/Lossy/Lossless)</option>
+                    </select>
+                </div>
+
+                <div class="toggle-container">
+                    <input type="checkbox" id="shuffleAnswersToggle" checked>
+                    <label for="shuffleAnswersToggle">Shuffle Answer Choices Automatically</label>
+                </div>
+            </div>
+
+            <button id="startBtn" class="btn-primary" style="width: 100%; padding: 0.75rem;">Start Quiz</button>
+        </div>
+
+        <!-- QUIZ INTERFACE SCREEN -->
+        <div id="quizScreen" class="hidden">
+            <div class="dashboard-grid">
+                <div class="stat-box">
+                    <div class="number" id="qCurrent">1 / 50</div>
+                    <div class="label">Progress</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number" id="scoreDisplay">0</div>
+                    <div class="label">Current Score</div>
+                </div>
+                <div class="stat-box" id="timerBox">
+                    <div class="number" id="timerDisplay">--:--</div>
+                    <div class="label">Time Remaining</div>
+                </div>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <div class="card">
+                <div class="meta-info">
+                    <span class="tag" id="questionCategory">Topic</span>
+                    <button id="bookmarkBtn" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">🔖 Bookmark</button>
+                </div>
+
+                <div class="question-text" id="questionText">Question text goes here?</div>
+
+                <div class="options-list" id="optionsContainer">
+                    <!-- Dynamic Options -->
+                </div>
+
+                <div class="explanation" id="explanationBox">
+                    <strong>Explanation:</strong>
+                    <p id="explanationText"></p>
+                </div>
+
+                <div class="nav-buttons">
+                    <button id="prevBtn">Previous</button>
+                    <button id="nextBtn" class="btn-primary">Next</button>
+                    <button id="submitBtn" class="btn-primary hidden" style="background-color: var(--success);">Submit Exam</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Question Navigator</h3>
+                <div class="grid-nav" id="gridNav"></div>
+            </div>
+        </div>
+
+        <!-- RESULTS SCREEN -->
+        <div id="resultScreen" class="card hidden" style="text-align: center;">
+            <h2>Quiz Completed!</h2>
+            <div style="font-size: 3rem; font-weight: 800; color: var(--primary); margin: 1rem 0;" id="finalScore">0 / 50</div>
+            <p id="percentageDisplay" style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 1.5rem;">0% Accuracy</p>
+            
+            <button id="restartBtn" class="btn-primary" style="padding: 0.75rem 1.5rem;">Return to Setup</button>
+        </div>
+    </main>
+
+    <script>
+        const questionsData = [
+            {
+                id: 1,
+                category: "text",
+                topic: "Character Sets",
+                question: "What is a 'character set' in computer science?",
+                options: [
+                    "A defined list of characters recognized by computer hardware/software, where each character is assigned a unique binary code",
+                    "A list of mathematical equations used to draw vector fonts on a screen",
+                    "The complete set of instructions executable by a specific Central Processing Unit",
+                    "A software library that translates high-level text into machine code instructions"
+                ],
+                correct: 0,
+                explanation: "A character set is a defined collection of symbols, letters, digits, and control codes that a computer can process, with each character represented by a unique binary number."
+            },
+            {
+                id: 2,
+                category: "text",
+                topic: "ASCII Specifications",
+                question: "How many bits are used by standard ASCII to store each character, and how many total unique characters can it represent?",
+                options: [
+                    "7 bits; 128 unique characters",
+                    "8 bits; 256 unique characters",
+                    "16 bits; 65,536 unique characters",
+                    "6 bits; 64 unique characters"
+                ],
+                correct: 0,
+                explanation: "Standard ASCII uses 7 bits per character, providing 2^7 = 128 distinct codes (ranging from 0 to 127)."
+            },
+            {
+                id: 3,
+                category: "text",
+                topic: "Extended ASCII",
+                question: "Extended ASCII increases the character code length to 8 bits. How many total characters can Extended ASCII encode?",
+                options: [
+                    "256 characters",
+                    "128 characters",
+                    "512 characters",
+                    "1,024 characters"
+                ],
+                correct: 0,
+                explanation: "Extended ASCII uses 8 bits per character, giving 2^8 = 256 possible character combinations (0 to 255)."
+            },
+            {
+                id: 4,
+                category: "text",
+                topic: "ASCII Bit Manipulation",
+                question: "In ASCII, uppercase 'A' is denary 65 (01000001) and lowercase 'a' is denary 97 (01100001). Which bit place value flips between uppercase and lowercase letters?",
+                options: [
+                    "Bit 5 (place value 32)",
+                    "Bit 6 (place value 64)",
+                    "Bit 4 (place value 16)",
+                    "Bit 0 (place value 1)"
+                ],
+                correct: 0,
+                explanation: "The difference between ASCII uppercase and lowercase letters is exactly 32. Toggling the bit with place value 32 converts case."
+            },
+            {
+                id: 5,
+                category: "text",
+                topic: "Unicode Rationale",
+                question: "Why was Unicode developed to replace standard and Extended ASCII?",
+                options: [
+                    "ASCII cannot represent characters from non-Latin scripts (e.g., Chinese, Arabic, Japanese) or emojis due to its limited bit width",
+                    "ASCII requires too much storage space compared to Unicode",
+                    "ASCII codes are incompatible with modern 64-bit microprocessors",
+                    "ASCII does not support numbers or mathematical punctuation marks"
+                ],
+                correct: 0,
+                explanation: "ASCII is restricted to 128 or 256 codes, which is insufficient for global alphabets, Asian logographic characters, and modern symbols."
+            },
+            {
+                id: 6,
+                category: "text",
+                topic: "Unicode Specifications",
+                question: "What bit lengths does Unicode commonly use, and how many characters can UTF-16 represent?",
+                options: [
+                    "16 to 32 bits; UTF-16 can represent 65,536 characters",
+                    "7 to 8 bits; UTF-16 can represent 256 characters",
+                    "4 to 8 bits; UTF-16 can represent 1,024 characters",
+                    "32 to 64 bits; UTF-16 can represent 4.2 billion characters"
+                ],
+                correct: 0,
+                explanation: "Unicode uses variable widths up to 32 bits. UTF-16 uses 16 bits per code unit, allowing 2^16 = 65,536 basic characters."
+            },
+            {
+                id: 7,
+                category: "text",
+                topic: "Unicode Compatibility",
+                question: "How does Unicode maintain backward compatibility with standard ASCII?",
+                options: [
+                    "The first 128 character codes in Unicode are identical to the standard ASCII character set",
+                    "Unicode translates ASCII text using an automated software plugin",
+                    "Unicode strips the top 8 bits from all text files before display",
+                    "ASCII characters are stored in a dedicated header file inside Unicode text"
+                ],
+                correct: 0,
+                explanation: "Unicode reserves codes 0 to 127 for standard ASCII, ensuring complete backward compatibility."
+            },
+            {
+                id: 8,
+                category: "text",
+                topic: "Text File Size Calculation",
+                question: "A text document contains 5,000 characters saved in standard ASCII (1 byte per character). What is the exact file size in bytes and kilobytes (KB)?",
+                options: [
+                    "5,000 bytes (5 KB)",
+                    "40,000 bytes (40 KB)",
+                    "2,500 bytes (2.5 KB)",
+                    "10,000 bytes (10 KB)"
+                ],
+                correct: 0,
+                explanation: "5,000 characters × 1 byte = 5,000 bytes. 5,000 ÷ 1,000 = 5 KB."
+            },
+            {
+                id: 9,
+                category: "text",
+                topic: "Unicode File Size Calculation",
+                question: "If a text document with 2,000 characters is saved using UTF-16 (2 bytes per character), what is its file size?",
+                options: [
+                    "4,000 bytes (4 KB)",
+                    "2,000 bytes (2 KB)",
+                    "16,000 bytes (16 KB)",
+                    "8,000 bytes (8 KB)"
+                ],
+                correct: 0,
+                explanation: "2,000 characters × 2 bytes = 4,000 bytes (4 KB)."
+            },
+            {
+                id: 10,
+                category: "sound",
+                topic: "Audio Digitization",
+                question: "How is a continuous analogue sound wave converted into digital data for storage in a computer?",
+                options: [
+                    "An Analogue-to-Digital Converter (ADC) samples the sound wave amplitude at regular time intervals and records each value as a binary number",
+                    "A Digital Signal Processor converts sound frequencies directly into HTML code",
+                    "Microphones compress sound waves into vector mathematical formulas",
+                    "Sound waves are reflected onto optical sensors that measure wavelength"
+                ],
+                correct: 0,
+                explanation: "An ADC measures (samples) the voltage amplitude of the continuous analogue wave at fixed time intervals and converts those measurements into binary integers."
+            },
+            {
+                id: 11,
+                category: "sound",
+                topic: "Sample Rate Definition",
+                question: "What is 'Sample Rate' in digital sound recording?",
+                options: [
+                    "The number of sound samples taken per second, measured in Hertz (Hz) or kilohertz (kHz)",
+                    "The total duration of the recorded audio file in minutes",
+                    "The range of audible frequencies that a digital speaker can output",
+                    "The number of audio channels recorded simultaneously"
+                ],
+                correct: 0,
+                explanation: "Sample rate is the frequency of sampling per second, measured in Hz (e.g., 44,100 Hz = 44.1 kHz)."
+            },
+            {
+                id: 12,
+                category: "sound",
+                topic: "Sample Resolution Definition",
+                question: "What is 'Sample Resolution' (Bit Depth) in digital sound recording?",
+                options: [
+                    "The number of bits allocated to store each individual sample measurement",
+                    "The physical dimensions of the speaker diaphragm used for playback",
+                    "The total number of samples collected across an entire recording session",
+                    "The speed at which sound binary data is transmitted across a network"
+                ],
+                correct: 0,
+                explanation: "Sample resolution (or bit depth) is the number of bits used to represent the amplitude of each sound sample."
+            },
+            {
+                id: 13,
+                category: "sound",
+                topic: "Sample Rate Impact",
+                question: "What are the effects of INCREASING the sound sampling rate?",
+                options: [
+                    "Sound quality is closer to the original analogue wave, but the resulting file size is larger",
+                    "Sound pitch increases, but file size remains unchanged",
+                    "File size decreases because fewer gaps exist between samples",
+                    "Background noise is completely eliminated automatically"
+                ],
+                correct: 0,
+                explanation: "Increasing sample rate captures more data points per second, improving sound fidelity but producing a larger file."
+            },
+            {
+                id: 14,
+                category: "sound",
+                topic: "Sample Resolution Impact",
+                question: "What happens when you INCREASE the sample resolution (bit depth) from 8-bit to 16-bit?",
+                options: [
+                    "Dynamic range improves and quantization errors decrease, but file size doubles",
+                    "Recording length doubles without increasing file size",
+                    "Audio pitch drops by half",
+                    "The recording is automatically converted from stereo to mono"
+                ],
+                correct: 0,
+                explanation: "Higher bit depth allows finer amplitude levels, reducing quantization error and improving dynamic range, but requiring twice as many bits per sample."
+            },
+            {
+                id: 15,
+                category: "sound",
+                topic: "Audio File Size Calculation Formula",
+                question: "Which formula calculates the file size in bits of an uncompressed monophonic audio file?",
+                options: [
+                    "Sample Rate (Hz) × Sample Resolution (bits) × Duration (seconds)",
+                    "Sample Rate (Hz) ÷ Sample Resolution (bits) × Duration (seconds)",
+                    "Sample Rate (kHz) × 60 × Bit Depth",
+                    "Total Samples ÷ 8 × Duration (seconds)"
+                ],
+                correct: 0,
+                explanation: "File size (bits) = Sample Rate (Hz) × Sample Resolution (bits) × Duration (seconds)."
+            },
+            {
+                id: 16,
+                category: "sound",
+                topic: "Audio File Size Calculation",
+                question: "Calculate the file size in bytes for a 10-second mono recording recorded at 44,100 Hz with a 16-bit sample resolution.",
+                options: [
+                    "882,000 bytes",
+                    "7,056,000 bytes",
+                    "441,000 bytes",
+                    "1,764,000 bytes"
+                ],
+                correct: 0,
+                explanation: "Bits = 44,100 × 16 × 10 = 7,056,000 bits. Bytes = 7,056,000 ÷ 8 = 882,000 bytes."
+            },
+            {
+                id: 17,
+                category: "sound",
+                topic: "Stereo Audio Calculation",
+                question: "How does recording in STEREO affect the calculated audio file size compared to MONO?",
+                options: [
+                    "Stereo doubles the file size because two separate channels are recorded simultaneously",
+                    "Stereo quadruples the file size due to phase alignment overhead",
+                    "Stereo has no effect on file size if the sample rate is halved",
+                    "Stereo reduces file size by compressing redundant left/right data"
+                ],
+                correct: 0,
+                explanation: "Stereo records 2 independent channels (Left and Right), doubling the overall data requirement."
+            },
+            {
+                id: 18,
+                category: "sound",
+                topic: "Audio Playback Mechanics",
+                question: "What hardware component converts stored digital binary audio data back into continuous sound waves for speakers?",
+                options: [
+                    "Digital-to-Analogue Converter (DAC)",
+                    "Analogue-to-Digital Converter (ADC)",
+                    "Graphics Processing Unit (GPU)",
+                    "Pulse Width Modulator (PWM)"
+                ],
+                correct: 0,
+                explanation: "A DAC converts stored digital binary values back into analogue voltage signals to drive speakers."
+            },
+            {
+                id: 19,
+                category: "images",
+                topic: "Bitmap Principles",
+                question: "How is a bitmap image represented and stored inside a computer?",
+                options: [
+                    "As a grid of tiny picture elements (pixels), where each pixel is assigned a binary code representing its color",
+                    "As a collection of geometric vector equations specifying lines and shapes",
+                    "As a sequence of compressed text codes describing scene coordinates",
+                    "As an array of light frequency numbers stored in an optical buffer"
+                ],
+                correct: 0,
+                explanation: "Bitmaps divide images into a matrix of pixels, storing binary color values for every pixel."
+            },
+            {
+                id: 20,
+                category: "images",
+                topic: "Pixel Definition",
+                question: "What is a 'pixel'?",
+                options: [
+                    "The smallest single controllable element or dot that makes up a digital bitmap image",
+                    "A measurement unit representing 1/100th of an inch on a display screen",
+                    "A hardware chip inside a camera that measures ambient light",
+                    "The physical distance between two pixels on a monitor screen"
+                ],
+                correct: 0,
+                explanation: "'Pixel' is short for Picture Element—the smallest individual dot of color in a bitmap image."
+            },
+            {
+                id: 21,
+                category: "images",
+                topic: "Image Resolution",
+                question: "What is meant by 'Image Resolution'?",
+                options: [
+                    "The number of pixels that make up a bitmap image, expressed as width × height (or pixels per inch - PPI)",
+                    "The physical dimensions of the monitor displaying the image",
+                    "The maximum number of colors an image file can store",
+                    "The compression ratio applied to shrink an image file"
+                ],
+                correct: 0,
+                explanation: "Image resolution refers to the total pixel dimensions (e.g., 1920 × 1080) or pixel density."
+            },
+            {
+                id: 22,
+                category: "images",
+                topic: "Colour Depth Definition",
+                question: "What is 'Colour Depth' (Bit Depth) in bitmap graphics?",
+                options: [
+                    "The number of bits used to represent the color of a single pixel",
+                    "The total number of pixels contained in an image file",
+                    "The ratio of primary colors to secondary colors in an image",
+                    "The contrast ratio between the brightest and darkest pixel"
+                ],
+                correct: 0,
+                explanation: "Colour depth specifies how many bits of data are assigned to record the color value for each pixel."
+            },
+            {
+                id: 23,
+                category: "images",
+                topic: "Colour Depth Calculations",
+                question: "If an image has a colour depth of 8 bits per pixel, how many unique colors can be used in the image?",
+                options: [
+                    "256 colors",
+                    "64 colors",
+                    "128 colors",
+                    "16 colors"
+                ],
+                correct: 0,
+                explanation: "Number of colors = 2^(colour depth). 2^8 = 256 colors."
+            },
+            {
+                id: 24,
+                category: "images",
+                topic: "True Colour Depth",
+                question: "How many bits per pixel are used in 'True Colour' graphics, and how many distinct colors does this yield?",
+                options: [
+                    "24 bits per pixel; ~16.7 million colors",
+                    "16 bits per pixel; 65,536 colors",
+                    "32 bits per pixel; 4.2 billion colors",
+                    "12 bits per pixel; 4,096 colors"
+                ],
+                correct: 0,
+                explanation: "True Colour uses 24 bits per pixel (8 bits each for Red, Green, Blue), providing 2^24 = 16,777,216 distinct colors."
+            },
+            {
+                id: 25,
+                category: "images",
+                topic: "Monochrome Graphics",
+                question: "How many bits per pixel are required for a simple black-and-white (monochrome) bitmap image?",
+                options: [
+                    "1 bit per pixel",
+                    "2 bits per pixel",
+                    "8 bits per pixel",
+                    "0.5 bits per pixel"
+                ],
+                correct: 0,
+                explanation: "A black-and-white pixel needs only 1 bit: 0 for black and 1 for white (2^1 = 2 states)."
+            },
+            {
+                id: 26,
+                category: "images",
+                topic: "Image File Size Calculation Formula",
+                question: "Which formula calculates the raw, uncompressed file size in bits of a bitmap image?",
+                options: [
+                    "Image Width (pixels) × Image Height (pixels) × Colour Depth (bits)",
+                    "Image Width (pixels) + Image Height (pixels) × Colour Depth (bits)",
+                    "(Image Width × Image Height) ÷ Colour Depth (bits)",
+                    "Image Resolution × 8 ÷ 1000"
+                ],
+                correct: 0,
+                explanation: "File size (bits) = Total pixels (Width × Height) × Colour Depth in bits."
+            },
+            {
+                id: 27,
+                category: "images",
+                topic: "Image File Size Calculation",
+                question: "Calculate the uncompressed file size in bytes for an image measuring 100 × 100 pixels with a colour depth of 8 bits.",
+                options: [
+                    "10,000 bytes",
+                    "80,000 bytes",
+                    "1,250 bytes",
+                    "100,000 bytes"
+                ],
+                correct: 0,
+                explanation: "Total bits = 100 × 100 × 8 = 80,000 bits. Convert to bytes: 80,000 ÷ 8 = 10,000 bytes."
+            },
+            {
+                id: 28,
+                category: "images",
+                topic: "Image File Size Calculation",
+                question: "Calculate the file size in bytes for a 500 × 400 pixel image with a 24-bit True Colour depth.",
+                options: [
+                    "600,000 bytes",
+                    "4,800,000 bytes",
+                    "200,000 bytes",
+                    "750,000 bytes"
+                ],
+                correct: 0,
+                explanation: "Bits = 500 × 400 × 24 = 4,800,000 bits. Bytes = 4,800,000 ÷ 8 = 600,000 bytes (~600 KB)."
+            },
+            {
+                id: 29,
+                category: "images",
+                topic: "Resolution Trade-offs",
+                question: "What happens when you INCREASE both image resolution and colour depth?",
+                options: [
+                    "Image clarity and color accuracy improve, but the file size increases significantly",
+                    "File size shrinks because pixels become smaller and denser",
+                    "Image loading times across networks speed up",
+                    "The image takes up less physical RAM memory"
+                ],
+                correct: 0,
+                explanation: "Increasing resolution and color depth captures more detail, increasing clarity and visual fidelity, but producing larger files."
+            },
+            {
+                id: 30,
+                category: "compression",
+                topic: "Compression Rationale",
+                question: "Why is data compression frequently applied to digital files before storage or transmission?",
+                options: [
+                    "To reduce file size, save storage space, and decrease network transmission times",
+                    "To prevent malware and computer viruses from infecting media files",
+                    "To convert file formats so they work on older operating systems",
+                    "To allow low-resolution monitors to display high-definition images"
+                ],
+                correct: 0,
+                explanation: "Data compression shrinks file sizes, optimizing storage capacity and reducing download/upload times over networks."
+            },
+            {
+                id: 31,
+                category: "compression",
+                topic: "Lossy vs Lossless Overview",
+                question: "What is the primary difference between Lossy and Lossless compression?",
+                options: [
+                    "Lossy compression permanently removes less noticeable data, whereas Lossless compression reduces file size without losing any original data",
+                    "Lossless compression achieves much higher compression ratios than Lossy compression",
+                    "Lossy compression can be fully reversed to reconstruct the exact original file",
+                    "Lossless compression is used exclusively for video files, while Lossy is used only for text documents"
+                ],
+                correct: 0,
+                explanation: "Lossy compression permanently discards redundant or less noticeable data to maximize space savings. Lossless compression shrinks files without dropping any original information."
+            },
+            {
+                id: 32,
+                category: "compression",
+                topic: "Lossy Compression Mechanics",
+                question: "How does Lossy compression work on digital sound files (e.g., MP3)?",
+                options: [
+                    "It uses psychoacoustics to remove sound frequencies outside human hearing ranges and quiet sounds masked by louder sounds",
+                    "It lowers audio playback speed to reduce file size",
+                    "It converts stereo recordings into mono recordings automatically",
+                    "It replaces repetitive audio phrases with short mathematical pointer codes"
+                ],
+                correct: 0,
+                explanation: "Audio lossy compression (MP3) uses psychoacoustic modeling to discard frequencies humans cannot hear (below 20Hz / above 20kHz) or sounds masked by louder audio."
+            },
+            {
+                id: 33,
+                category: "compression",
+                topic: "Lossy Compression Applications",
+                question: "For which type of file is Lossy compression completely UNSUITABLE?",
+                options: [
+                    "Computer executable programs and text documents",
+                    "High-definition video streams",
+                    "Digital photograph uploads",
+                    "Background audio files for web pages"
+                ],
+                correct: 0,
+                explanation: "Executables, database files, and text documents require absolute precision; losing even a single bit can corrupt executable code or alter written data."
+            },
+            {
+                id: 34,
+                category: "compression",
+                topic: "Lossless Compression Mechanics",
+                question: "How does Lossless compression shrink files without losing data?",
+                options: [
+                    "By finding repeated patterns of data and indexing them using shorter reference codes",
+                    "By lowering screen resolution when files are closed",
+                    "By discarding metadata like dates and author tags",
+                    "By truncating leading zeros from 8-bit binary numbers"
+                ],
+                correct: 0,
+                explanation: "Lossless compression algorithmically identifies repeating patterns or runs of data and represents them with shorter summary codes."
+            },
+            {
+                id: 35,
+                category: "compression",
+                topic: "Lossless Applications",
+                question: "Which of the following file formats utilizes LOSSLESS compression?",
+                options: [
+                    "PNG",
+                    "JPEG",
+                    "MP3",
+                    "MP4"
+                ],
+                correct: 0,
+                explanation: "PNG (Portable Network Graphics) uses lossless compression. JPEG, MP3, and MP4 use lossy algorithms."
+            },
+            {
+                id: 36,
+                category: "compression",
+                topic: "RLE Definition",
+                question: "What is Run-Length Encoding (RLE)?",
+                options: [
+                    "A lossless compression algorithm that replaces consecutive repeating data units with a count-value pair",
+                    "A lossy compression scheme that deletes alternate rows of pixels",
+                    "An encryption method for securing text transmissions over Wi-Fi",
+                    "A hardware acceleration feature used by graphics cards to decode video"
+                ],
+                correct: 0,
+                explanation: "RLE is a simple form of lossless data compression that stores sequences of identical data values as a single data value and count."
+            },
+            {
+                id: 37,
+                category: "compression",
+                topic: "RLE Calculation",
+                question: "Compress the data sequence 'AAAAABBBCC' using basic Run-Length Encoding (RLE).",
+                options: [
+                    "5A3B2C",
+                    "A5B3C2",
+                    "1A5B3C",
+                    "5A2B3C"
+                ],
+                correct: 0,
+                explanation: "'AAAAABBBCC' contains 5 'A's, 3 'B's, and 2 'C's. Formatted as count-value pairs, this becomes 5A3B2C."
+            },
+            {
+                id: 38,
+                category: "compression",
+                topic: "RLE Binary Image Encoding",
+                question: "A row of pixels in a black-and-white bitmap is: `W W W W B B W W`. Using RLE where W=White and B=Black, how is this stored?",
+                options: [
+                    "4W 2B 2W",
+                    "4W 4B",
+                    "8WB",
+                    "3W 2B 3W"
+                ],
+                correct: 0,
+                explanation: "4 White pixels, followed by 2 Black pixels, followed by 2 White pixels = 4W 2B 2W."
+            },
+            {
+                id: 39,
+                category: "compression",
+                topic: "RLE Efficiency Limitation",
+                question: "When can Run-Length Encoding (RLE) potentially INCREASE a file's size instead of compressing it?",
+                options: [
+                    "When the file contains constantly changing data with no adjacent repeated characters (e.g., ABCABCABC)",
+                    "When the file contains very long sequences of identical colors",
+                    "When applied to simple black-and-white diagrams",
+                    "When compressing large plain text documents"
+                ],
+                correct: 0,
+                explanation: "If there are no repeating adjacent data units (e.g., 'ABC'), RLE encodes '1A1B1C', doubling the required storage space."
+            },
+            {
+                id: 40,
+                category: "compression",
+                topic: "JPEG Mechanics",
+                question: "Why is JPEG considered a lossy image format?",
+                options: [
+                    "It removes subtle color differences human eyes struggle to perceive and averages pixel blocks",
+                    "It limits total pixel dimensions to a maximum of 1080p",
+                    "It strips transparent background layers from vector drawings",
+                    "It discards 50% of image pixels during every save cycle"
+                ],
+                correct: 0,
+                explanation: "JPEG compresses images by dropping color data and fine detail that human vision cannot easily distinguish."
+            },
+            {
+                id: 41,
+                category: "text",
+                topic: "Control Characters",
+                question: "What is the function of the first 32 codes (0 to 31) in the standard ASCII table?",
+                options: [
+                    "Control characters used to command hardware devices (e.g., Line Feed, Carriage Return, Escape)",
+                    "Mathematical operators (+, -, *, /)",
+                    "Capital letters A through Z",
+                    "Punctuation marks and brackets"
+                ],
+                correct: 0,
+                explanation: "ASCII codes 0–31 are non-printing control characters used to send commands to printers, displays, and communication channels."
+            },
+            {
+                id: 42,
+                category: "sound",
+                topic: "Sampling Frequency Unit",
+                question: "If an audio CD records sound at 44,100 Hz, how many samples are collected per second?",
+                options: [
+                    "44,100 samples",
+                    "4,410 samples",
+                    "441,000 samples",
+                    "88,200 samples"
+                ],
+                correct: 0,
+                explanation: "1 Hz = 1 sample per second. 44,100 Hz = 44,100 samples per second."
+            },
+            {
+                id: 43,
+                category: "images",
+                topic: "Monochrome Grid Calculation",
+                question: "A black-and-white icon measures 16 × 16 pixels. How many bytes of storage are required to store its uncompressed pixel data?",
+                options: [
+                    "32 bytes",
+                    "256 bytes",
+                    "16 bytes",
+                    "64 bytes"
+                ],
+                correct: 0,
+                explanation: "Total pixels = 16 × 16 = 256 pixels. Monochrome = 1 bit per pixel. Total bits = 256. In bytes = 256 ÷ 8 = 32 bytes."
+            },
+            {
+                id: 44,
+                category: "sound",
+                topic: "Quantization Definition",
+                question: "What is 'Quantization Error' in digital sound recording?",
+                options: [
+                    "The rounding difference between the continuous analogue amplitude and the nearest digital sample value",
+                    "Background static introduced by faulty microphone wiring",
+                    "The loss of sound data when audio files are converted to MP3 format",
+                    "Distortion caused by playing audio through mono speakers"
+                ],
+                correct: 0,
+                explanation: "Quantization error occurs when an analogue amplitude measurement is rounded to fit the discrete binary levels supported by the sample resolution."
+            },
+            {
+                id: 45,
+                category: "compression",
+                topic: "Compression Ratios",
+                question: "An uncompressed image of 2,000 KB is compressed to 400 KB using JPEG. What is the compression ratio?",
+                options: [
+                    "5:1",
+                    "4:1",
+                    "2:1",
+                    "10:1"
+                ],
+                correct: 0,
+                explanation: "2,000 KB ÷ 400 KB = 5. The compression ratio is 5:1."
+            },
+            {
+                id: 46,
+                category: "text",
+                topic: "Character Storage Limits",
+                question: "How many distinct characters can be represented using an 8-bit character code?",
+                options: [
+                    "256",
+                    "128",
+                    "512",
+                    "64"
+                ],
+                correct: 0,
+                explanation: "2^8 = 256 possible character representations."
+            },
+            {
+                id: 47,
+                category: "images",
+                topic: "Color Palette Indexing",
+                question: "How does an indexed 8-bit color palette reduce image file size compared to True Colour?",
+                options: [
+                    "It stores a palette table of 256 selected colors, allowing each pixel to reference a palette index using only 8 bits instead of 24 bits",
+                    "It limits the image resolution to a maximum of 256 × 256 pixels",
+                    "It converts color images into grayscale images",
+                    "It strips color information from every second pixel"
+                ],
+                correct: 0,
+                explanation: "Indexed color maps 8-bit pixel values to a table of 256 colors, saving space over storing 24-bit RGB values directly for every pixel."
+            },
+            {
+                id: 48,
+                category: "sound",
+                topic: "Nyquist Theorem",
+                question: "According to sampling principles, what minimum sampling rate is required to accurately capture a sound frequency of 20,000 Hz?",
+                options: [
+                    "At least 40,000 Hz (double the highest frequency)",
+                    "Exactly 20,000 Hz",
+                    "80,000 Hz",
+                    "10,000 Hz"
+                ],
+                correct: 0,
+                explanation: "The Nyquist-Shannon sampling theorem states that the sample rate must be at least twice the highest frequency component of the signal (2 × 20,000 Hz = 40,000 Hz)."
+            },
+            {
+                id: 49,
+                category: "compression",
+                topic: "Lossless Audio Formats",
+                question: "Which of the following audio file formats provides LOSSLESS audio compression?",
+                options: [
+                    "FLAC",
+                    "MP3",
+                    "AAC",
+                    "OGG Vorbis"
+                ],
+                correct: 0,
+                explanation: "FLAC (Free Lossless Audio Codec) compresses audio without discarding sound detail. MP3, AAC, and OGG are lossy formats."
+            },
+            {
+                id: 50,
+                category: "images",
+                topic: "Resolution vs Quality",
+                question: "What visual effect occurs when a low-resolution bitmap image is stretched to fill a large high-definition monitor?",
+                options: [
+                    "Pixelation—individual pixels become visible, making edges appear blocky and blurry",
+                    "The image automatically converts into a high-resolution vector drawing",
+                    "Color depth increases automatically to fill screen gaps",
+                    "The image displays in monochrome format"
+                ],
+                correct: 0,
+                explanation: "Enlarging a low-resolution bitmap forces pixels to scale up, making pixel blocks visible (pixelation)."
+            }
+        ];
+
+        // State variables
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let userAnswers = {};
+        let bookmarked = {};
+        let quizMode = 'practice';
+        let timerInterval = null;
+        let timeRemaining = 45 * 60; // 45 mins in seconds
+
+        // DOM elements
+        const setupScreen = document.getElementById('setupScreen');
+        const quizScreen = document.getElementById('quizScreen');
+        const resultScreen = document.getElementById('resultScreen');
+        const themeToggle = document.getElementById('themeToggle');
+        
+        const modeSelect = document.getElementById('modeSelect');
+        const topicSelect = document.getElementById('topicSelect');
+        const shuffleAnswersToggle = document.getElementById('shuffleAnswersToggle');
+        const startBtn = document.getElementById('startBtn');
+
+        const qCurrent = document.getElementById('qCurrent');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const progressBar = document.getElementById('progressBar');
+        const questionCategory = document.getElementById('questionCategory');
+        const bookmarkBtn = document.getElementById('bookmarkBtn');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const explanationBox = document.getElementById('explanationBox');
+        const explanationText = document.getElementById('explanationText');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const gridNav = document.getElementById('gridNav');
+
+        // Theme Toggle Logic
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+        });
+
+        // Initialize / Filter Questions
+        startBtn.addEventListener('click', () => {
+            quizMode = modeSelect.value;
+            const selectedTopic = topicSelect.value;
+            
+            if (selectedTopic === 'all') {
+                currentQuestions = JSON.parse(JSON.stringify(questionsData));
+            } else {
+                currentQuestions = JSON.parse(JSON.stringify(questionsData.filter(q => q.category === selectedTopic)));
+            }
+
+            // Prepare choices
+            currentQuestions.forEach(q => {
+                let optionsObj = q.options.map((opt, idx) => ({ text: opt, originalIndex: idx }));
+                if (shuffleAnswersToggle.checked) {
+                    for (let i = optionsObj.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [optionsObj[i], optionsObj[j]] = [optionsObj[j], optionsObj[i]];
+                    }
+                }
+                q.shuffledOptions = optionsObj;
+            });
+
+            currentIndex = 0;
+            userAnswers = {};
+            bookmarked = {};
+
+            setupScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+
+            if (quizMode === 'exam') {
+                document.getElementById('timerBox').classList.remove('hidden');
+                timeRemaining = 45 * 60;
+                startTimer();
+                submitBtn.classList.remove('hidden');
+            } else {
+                document.getElementById('timerBox').classList.add('hidden');
+                submitBtn.classList.add('hidden');
+            }
+
+            renderGridNav();
+            renderQuestion();
+        });
+
+        function renderGridNav() {
+            gridNav.innerHTML = '';
+            currentQuestions.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'grid-nav-btn';
+                btn.innerText = idx + 1;
+                
+                if (userAnswers[idx] !== undefined) btn.classList.add('answered');
+                if (bookmarked[idx]) btn.classList.add('bookmarked');
+                
+                btn.addEventListener('click', () => {
+                    currentIndex = idx;
+                    renderQuestion();
+                });
+                gridNav.appendChild(btn);
+            });
+        }
+
+        function renderQuestion() {
+            const q = currentQuestions[currentIndex];
+            qCurrent.innerText = `${currentIndex + 1} / ${currentQuestions.length}`;
+            questionCategory.innerText = q.topic.toUpperCase();
+            questionText.innerText = `${currentIndex + 1}. ${q.question}`;
+            
+            progressBar.style.width = `${((currentIndex + 1) / currentQuestions.length) * 100}%`;
+
+            bookmarkBtn.innerText = bookmarked[currentIndex] ? "🔖 Bookmarked" : "🔖 Bookmark";
+            bookmarkBtn.style.color = bookmarked[currentIndex] ? "var(--accent)" : "inherit";
+
+            optionsContainer.innerHTML = '';
+            explanationBox.style.display = 'none';
+
+            const letters = ['A', 'B', 'C', 'D'];
+            
+            q.shuffledOptions.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                
+                const prefix = document.createElement('span');
+                prefix.className = 'option-prefix';
+                prefix.innerText = `${letters[idx]}.`;
+                
+                const text = document.createElement('span');
+                text.innerText = opt.text;
+
+                btn.appendChild(prefix);
+                btn.appendChild(text);
+
+                // Option State in Practice Mode
+                if (quizMode === 'practice' && userAnswers[currentIndex] !== undefined) {
+                    if (opt.originalIndex === q.correct) {
+                        btn.classList.add('correct');
+                    }
+                    if (userAnswers[currentIndex] === idx && opt.originalIndex !== q.correct) {
+                        btn.classList.add('incorrect');
+                    }
+                } else if (userAnswers[currentIndex] === idx) {
+                    btn.classList.add('selected');
+                }
+
+                btn.addEventListener('click', () => selectAnswer(idx));
+                optionsContainer.appendChild(btn);
+            });
+
+            if (quizMode === 'practice' && userAnswers[currentIndex] !== undefined) {
+                explanationText.innerText = q.explanation;
+                explanationBox.style.display = 'block';
+            }
+
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.innerText = currentIndex === currentQuestions.length - 1 ? "Finish" : "Next";
+            updateScoreDisplay();
+        }
+
+        function selectAnswer(optionIndex) {
+            userAnswers[currentIndex] = optionIndex;
+            renderGridNav();
+            renderQuestion();
+        }
+
+        bookmarkBtn.addEventListener('click', () => {
+            bookmarked[currentIndex] = !bookmarked[currentIndex];
+            renderGridNav();
+            renderQuestion();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < currentQuestions.length - 1) {
+                currentIndex++;
+                renderQuestion();
+            } else {
+                finishQuiz();
+            }
+        });
+
+        submitBtn.addEventListener('click', () => {
+            if (confirm("Are you sure you want to submit your exam?")) {
+                finishQuiz();
+            }
+        });
+
+        function updateScoreDisplay() {
+            let correctCount = 0;
+            Object.keys(userAnswers).forEach(idx => {
+                const q = currentQuestions[idx];
+                const selectedOptIndex = userAnswers[idx];
+                if (selectedOptIndex !== undefined) {
+                    const origIndex = q.shuffledOptions[selectedOptIndex].originalIndex;
+                    if (origIndex === q.correct) correctCount++;
+                }
+            });
+            scoreDisplay.innerText = correctCount;
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                const mins = Math.floor(timeRemaining / 60);
+                const secs = timeRemaining % 60;
+                timerDisplay.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Time's up! Submitting your exam.");
+                    finishQuiz();
+                }
+            }, 1000);
+        }
+
+        function finishQuiz() {
+            clearInterval(timerInterval);
+            let score = 0;
+            currentQuestions.forEach((q, idx) => {
+                const selectedOptIndex = userAnswers[idx];
+                if (selectedOptIndex !== undefined) {
+                    if (q.shuffledOptions[selectedOptIndex].originalIndex === q.correct) {
+                        score++;
+                    }
+                }
+            });
+
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+
+            document.getElementById('finalScore').innerText = `${score} / ${currentQuestions.length}`;
+            const percentage = Math.round((score / currentQuestions.length) * 100);
+            document.getElementById('percentageDisplay').innerText = `${percentage}% Score`;
+        }
+
+        document.getElementById('restartBtn').addEventListener('click', () => {
+            resultScreen.classList.add('hidden');
+            setupScreen.classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
